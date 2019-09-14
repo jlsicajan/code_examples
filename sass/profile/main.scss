@@ -1,0 +1,27 @@
+.panel {
+    background-color: #24384B;
+    height: 100vh;
+}
+
+.navbar-panel{
+    background-color: $brand-secondary;
+    min-height: 54px;
+}
+
+.profile_config{
+    .navbar-panel{
+        background: $brand-primary-gradient;
+    }
+}
+
+#category-table {
+    thead {
+        tr {
+            th {
+                .new-category {
+                    float: right;
+                }
+            }
+        }
+    }
+}

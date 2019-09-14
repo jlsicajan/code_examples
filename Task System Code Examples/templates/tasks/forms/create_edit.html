@@ -1,0 +1,73 @@
+<button type="button" class="btn btn-default back_to_list_main_button">
+    <i class="fa fa-backward"></i> Back to task list
+</button>
+<hr>
+<div class="form-horizontal">
+    <!-- TASK HEAD -->
+    <div class="form">
+
+        <!-- END TASK HEAD -->
+        <!-- USER TASK -->
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="assignedTo_lbl" for="assignedTo"><strong>Assigned To</strong></label>
+                <select name="assignedTo" id="assignedTo" class="form-control todo-taskbody-tasktitle"
+                        required="required" multiple="multiple"></select>
+            </div>
+        </div>
+        <!-- TASK TITLE -->
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="name_lbl" for="name"><strong>Task Name</strong></label>
+                <input type="text" id="name" name="name" class="form-control todo-taskbody-tasktitle"
+                       placeholder="Task Title"
+                       required="required">
+            </div>
+        </div>
+        <!-- TASK DESC -->
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="description_lbl" for="description"><strong>Description</strong> <small>max: 250 characters</small></label>
+                <textarea name="description" maxlength="250" class="form-control todo-taskbody-taskdesc task_description_field" rows="8"
+                          placeholder="Task Description" required="required">
+                </textarea>
+            </div>
+        </div>
+        <!-- END TASK DESC -->
+        <!-- TASK DUE DATE -->
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="dueDate_lbl" for="dueDate"><strong>Due Date</strong></label>
+                <div class="input-icon">
+                    <i class="fa fa-calendar"></i>
+                    <input name="dueDate" type="text" class="form-control todo-taskbody-due" placeholder="Due Date">
+                </div>
+            </div>
+        </div>
+        <!-- TASK TAGS -->
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="priority_lbl" for="priority"><strong>Priority</strong></label>
+                <select name="priority" id="priority" class="form-control todo-taskbody-tasktitle">
+                    <option value="1">High</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Low</option>
+                </select>
+            </div>
+        </div>
+        {% include 'tasks/status.html' with el_class='status_action' %}
+        <!-- TASK TAGS -->
+    </div>
+</div>
+<div class="tabbable-line comments-history-container">
+    <ul class="nav nav-tabs ">
+        <li class="active">
+            <a href="#comments" data-toggle="tab"> Comments </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="comments">
+            {% include 'tasks/comments.html' %}
+        </div>
+    </div>
+</div>

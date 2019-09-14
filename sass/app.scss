@@ -1,0 +1,142 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "resources/assets/sass/plugins/select2";
+@import "resources/assets/sass/common/_variables";
+@import "resources/assets/sass/schedule/main";
+@import "resources/assets/sass/profile/main";
+@import "resources/assets/sass/common/custom_buttons";
+@import "resources/assets/sass/common/elements";
+@import "resources/assets/sass/schedule/dnd";
+@import "~font-awesome/scss/font-awesome.scss";
+
+@mixin set-border-box {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+@mixin disable-text-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+html, body, h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin: 0;
+}
+
+input[type=color]{
+    height: 38px;
+}
+
+#schedule {
+    margin-top: 50px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    min-height: 200vh;
+    background-color: gray;
+
+    @include set-border-box;
+
+    .day {
+        width: calc(100% / 5.0 - 5px);
+        display: inline-block;
+        @include disable-text-select;
+
+        h3, .date {
+            background-color: white;
+            text-align: center;
+            font-size: 4vh;
+            padding: 1vh 0;
+            @include disable-text-select;
+        }
+
+        .date{
+            font-size: 1.5vh;
+            color: #69696e;
+        }
+
+        .time-block {
+            position: relative;
+            width: 100%;
+            height: 10vh;
+            text-align: right;
+            padding: 2px 8px;
+            font-size: 1.5vh;
+            @include set-border-box;
+            @include disable-text-select;
+
+            .time-day {
+                cursor: pointer;
+                position:absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                @include disable-text-select;
+            }
+        }
+
+        .time-block.even {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .time-block.odd {
+            background-color: #4b4b4b;
+            color: darksalmon;
+        }
+
+        .time-block.selected {
+            background-color: royalblue;
+            color: white;
+            font-weight: bold;
+        }
+
+        .time-block.selected.start-time {
+            background-color: cornflowerblue;
+            color: white;
+            font-weight: bold;
+        }
+
+        .time-block.selected.end-time {
+            background-color: steelblue;
+            color: white;
+            font-weight: bold;
+        }
+
+        .time-block.scheduled {
+            //background-color: darkseagreen;
+            color: white;
+            font-weight: bold;
+        }
+
+        .time-block.scheduled.start-time {
+            //background-color: lightseagreen;
+            color: white;
+            font-weight: bold;
+        }
+
+        .time-block.scheduled.end-time {
+            //background-color: darkolivegreen;
+            color: white;
+            font-weight: bold;
+        }
+    }
+}
+
+#time-block-info{
+    .modal-subtitle{
+        color: $text-color;
+    }
+
+    .modal-title{
+        color: $text-color;
+    }
+
+    .time-slot-title{
+        color: #000;
+    }
+}

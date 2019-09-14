@@ -1,0 +1,62 @@
+.board-menu{
+    width: 100%;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    z-index: 6;
+    background-color: white;
+}
+
+.day{
+    transform-style: preserve-3d;
+    transition: 1.2s;
+    h3{
+        position: sticky;
+        top: 0;
+        z-index: 6;
+        top: 50px;
+    }
+
+    .date{
+        position: sticky;
+        top: 113px;
+        z-index: 6;
+    }
+}
+
+.move-week{
+    transform: rotateY(360deg);
+}
+
+.time-block{
+    .remove_schedule, .edit_schedule, .complete_schedule, .incomplete_schedule{
+        position: absolute;
+        background-color: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        &:focus{
+            outline: none;
+        }
+    }
+
+    .edit_schedule{
+        right: 35px;
+    }
+
+    .complete_schedule, .incomplete_schedule{
+        right: 70px;
+    }
+}
+
+.week-indicator, .week-number{
+    font-size: 2vh;
+    color: #69696e;
+}
+
+.completed {
+    background: repeating-linear-gradient(45deg, #D8FFDB, #d8ffdc 1px, #333 1px, #333 34.7px)
+}

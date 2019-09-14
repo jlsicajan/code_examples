@@ -1,0 +1,335 @@
+<script type="text/javascript">
+    function save_task_in_db(form_data, callback) {
+        $.ajax({
+            url: '{% url 'task_save' %}',
+            method: 'post',
+            data: form_data,
+            beforeSend: function () {
+            },
+            success: function (all_done) {
+                callback(all_done.task_info);
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong saving the task, please try again later or contact support staff.');
+            },
+            complete: function () {
+            }
+        });
+    }
+
+    function update_task_in_db(form_data, callback) {
+        $.ajax({
+            url: '{% url 'task_update' %}',
+            method: 'post',
+            data: form_data,
+            success: function (all_done) {
+                callback();
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong updating the task, please try again later or contact support staff.');
+            },
+        });
+    }
+
+    function save_comment_in_db(form_data, callback) {
+        $.ajax({
+            url: '{% url 'comment_save' %}',
+            method: 'post',
+            data: form_data,
+            success: function (data) {
+                if (data.success) {
+                    callback(data);
+                } else {
+                    toastr.error(data.message);
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong saving the comment, please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function set_priority_panel_information(high_priority_tasks, medium_priority_task, low_priority_task) {
+        $('.badge_info_high').show().html('<span class="badge button-color-high"> ' + high_priority_tasks + ' </span> High ');
+        $('.badge_info_medium').show().html('<span class="badge button-color-medium"> ' + medium_priority_task + ' </span> Medium ');
+        $('.badge_info_low').show().html('<span class="badge button-color-low bg-font-green-meadow"> ' + low_priority_task + ' </span> Low ');
+    }
+
+    function set_classification_panel_information(mine, assigned, archived, unassigned) {
+        $('.badge_info_mine').show().html('<span class="badge badge-default"> ' + mine + ' </span> Mine ');
+        $('.badge_info_unassigned').show().html('<span class="badge badge-default"> ' + unassigned + ' </span> Unassigned ');
+        $('.badge_info_assigned').show().html('<span class="badge badge-default"> ' + assigned + ' </span> Assigned ');
+        $('.badge_info_archived').show().html('<i class="fa fa-archive"></i> Archived ');
+    }
+
+    function set_status_panel_information(done, in_progress, pending) {
+        $('.badge_info_completed').show().html('<span class="badge bg-green-jungle bg-font-green-jungle hide"> ' + done + ' </span> Completed ');
+        $('.badge_info_in_progress').show().html('<span class="badge bg-blue bg-font-blue"> ' + in_progress + ' </span> In Progress');
+        $('.badge_info_pending').show().html('<span class="badge bg-grey-salt bg-font-grey-salt"> ' + pending + ' </span> Pending ');
+    }
+
+    function get_panels_information() {
+        $.ajax({
+            url: '{% url 'task_panel_information' %}',
+            method: 'post',
+            success: function (data) {
+                if (data) {
+                    set_priority_panel_information(data.high_priority_tasks, data.medium_priority_task, data.low_priority_task);
+                    set_classification_panel_information(data.logged_in_user, data.assigned, data.archived, data.unassigned);
+                    set_status_panel_information(data.done, data.in_progress, data.pending);
+                    add_click_events_to_panels();
+                } else {
+                    send_error_to_sentry('No data', 'Something went wrong please try again later or contact support staff.');
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function get_tasks_filtered(callback) {
+
+        if ($('.item_selected_in_panel').length == 0) {
+            task_general_filters = {};
+        }
+
+        $('.filter').each(function () {
+            let value = $(this).val();
+            if (value) {
+                if (Array.isArray(value)) {
+                    task_general_filters[$(this).attr('name')] = JSON.stringify($(this).val());
+                } else {
+                    task_general_filters[$(this).attr('name')] = $(this).val();
+                }
+            }
+        });
+
+        task_general_filters['current_task_page'] = current_task_page;
+        $.ajax({
+            url: '{% url 'task_filter' %}',
+            method: 'post',
+            data: task_general_filters,
+            success: function (data) {
+                if (data.result) {
+                    current_visible_tasks = data.result;
+                    more_task_list_pagination = data.more;
+                    callback();
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function load_more_tasks_filtered(callback) {
+        let filters = {};
+        if (!task_general_filters) {
+            $('.filter').each(function () {
+                let value = $(this).val();
+                if (value) {
+                    if (Array.isArray(value)) {
+                        filters[$(this).attr('name')] = JSON.stringify($(this).val());
+                    } else {
+                        filters[$(this).attr('name')] = $(this).val();
+                    }
+                }
+            });
+        } else {
+            filters = task_general_filters;
+        }
+
+        filters['current_task_page'] = current_task_page;
+        $.ajax({
+            url: '{% url 'task_filter' %}',
+            method: 'post',
+            data: filters,
+            success: function (data) {
+                if (data.result) {
+                    callback(data);
+                } else {
+                    send_error_to_sentry('No result', 'Something went wrong please try again later or contact support staff.');
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function get_task_by_id(task_id, callback) {
+        let filters = {};
+        filters['task_id'] = task_id;
+        $.ajax({
+            url: '{% url "task_filter" %}',
+            method: 'post',
+            data: filters,
+            success: function (data) {
+                if (data.result) {
+                    callback(data.result, data.tz);
+                } else {
+                    send_error_to_sentry('No result', 'Something went wrong please try again later or contact support staff.');
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function get_task_by_name(name, callback) {
+        let filters = {};
+        filters['name'] = name;
+        $.ajax({
+            url: 'task/filter/',
+            method: 'post',
+            data: filters,
+            success: function (data) {
+                if (data.result) {
+                    callback(data.result);
+                } else {
+                    send_error_to_sentry('No result', 'Something went wrong please try again later or contact support staff.');
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function get_comment_by_id(comment_id, callback) {
+        let filters = {};
+        filters['comment_id'] = comment_id;
+
+        $.ajax({
+            url: '{% url "comment_filter" %}',
+            method: 'post',
+            data: filters,
+            success: function (data) {
+                if (data.result) {
+                    callback(data.result, data.tz);
+                } else {
+                    if (data.message_not_found) {
+                        console.warn(data.message);
+                    } else {
+                        send_error_to_sentry('No result', 'Something went wrong please try again later or contact support staff.');
+                    }
+                }
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function load_comments(task_id, callback) {
+        $.ajax({
+            url: 'task/' + task_id + '/comments/',
+            method: 'post',
+            data: {'task_id': task_id},
+            success: function (data) {
+                callback(data);
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function load_users_for_task(task_id, callback, el_id) {
+        $.ajax({
+            url: 'task/' + task_id + '/users/',
+            method: 'post',
+            data: {'task_id': task_id},
+            success: function (data) {
+                users_involved_to_task_selected = data;
+                callback(users_involved_to_task_selected, el_id)
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong loading the users, please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function get_users_for_task_general(task_id, callback) {
+        $.ajax({
+            url: 'task/' + task_id + '/users/',
+            method: 'post',
+            data: {'task_id': task_id},
+            success: function (data) {
+                callback(data);
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong loading the users, please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function update_task_status(task_id, new_status, callback) {
+        let old_status = task_selected_for_edit.status;
+        let task_info = {
+            'task_id': Number(task_selected_for_edit.id),
+            'old_status': old_status,
+            'new_status': new_status,
+            'description': task_selected_for_edit.name + " changed from " + statutes[old_status] + ' to ' + statutes[new_status],
+            'customer_id': Number(customerId),
+            'updated_at': moment().unix(),
+            'updated_by': Number(userId),
+        };
+
+        $.ajax({
+            url: '{% url 'task_status_update' %}',
+            method: 'post',
+            data: {'task_id': task_id, 'new_status': new_status},
+            success: function (data) {
+                callback(task_info);
+                $('.status_action_' + new_status).addClass('active').siblings().removeClass('active');
+                toastr.success(task_selected_for_edit.name + " changed from " + statutes[old_status] + ' to ' + statutes[new_status]);
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong updating the task, please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function rm_del_task(task_id, callback) {
+        $.ajax({
+            url: '{% url 'task_delete' %}',
+            method: 'post',
+            data: {'task_id': task_id},
+            success: function (all_done) {
+                callback();
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong deleting the task, please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function filter_uncompleted_tasks(task_ids, callback) {
+        $.ajax({
+            url: '{% url 'uncompleted_task_filter' %}',
+            method: 'post',
+            data: {'task_ids': task_ids},
+            success: function (tasks_ids_filtered) {
+                callback(tasks_ids_filtered);
+            },
+            error: function (error) {
+                send_error_to_sentry(error, 'Something went wrong deleting the task, please try again later or contact support staff.');
+            }
+        });
+    }
+
+    function send_error_to_sentry(error, message) {
+        $.ajax({
+            type: "POST",
+            url: "/messaging/log_error_on_sentry/",
+            dataType: 'json',
+            data: {'data': error},
+            success: function (res) {
+                toastr.error(message)
+            }
+        });
+    }
+</script>

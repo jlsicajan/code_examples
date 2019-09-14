@@ -1,0 +1,44 @@
+.selected-sides {
+    border-left: 2px black dashed;
+    border-right: 2px black dashed;
+}
+
+.selected-last {
+    border-bottom: 2px black dashed;
+}
+
+.selected-first {
+    border-top: 2px black dashed;
+}
+
+.over-sides {
+    border-left: 4px white dashed;
+    border-right: 4px white dashed;
+}
+
+.over-last {
+    border-bottom: 4px white dashed;
+}
+
+.over-first {
+    border-top: 4px white dashed;
+}
+
+.over-stripe {
+    background: repeating-linear-gradient(
+                    -23deg,
+                    #005300,
+                    #005300 10px,
+                    #333 10px,
+                    #333 20px
+    );
+}
+
+.over-stripe-error {
+    background: repeating-linear-gradient(
+                    -23deg,
+                    #732937,
+                    #732937 10px,
+                    #333 10px,
+                    #333 20px);
+}

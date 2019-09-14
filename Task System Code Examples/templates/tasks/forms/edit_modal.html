@@ -1,0 +1,107 @@
+<div id="edit_task_modal" class="modal fade modal-scroll in" tabindex="-1" data-replace="true">
+    <div class="modal-dialog">
+        <form action="#" class="modal-content form-horizontal task_edit_form" autocomplete="off"
+              data-form-status="edit">
+            <div class="modal-header">
+                <button type="button" class="close close_modal" onclick="cancel_edit_from_modal()"></button>
+                <h4 class="modal-title task-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="m-grid m-grid-responsive-md">
+                    <div class="m-grid-row">
+                        <div class="m-grid-col m-grid-col-middle m-grid-col-md-9 p-10">
+                            <div class="form">
+                                <!-- END TASK HEAD -->
+                                <!-- USER TASK -->
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="modal_assignedTo_lbl" for="modal_assignedTo"><strong>Assigned To</strong></label>
+                                        <select name="modal_assignedTo" id="modal_assignedTo"
+                                                class="form-control todo-taskbody-tasktitle"
+                                                required="required" multiple="multiple" disabled="disabled"></select>
+                                    </div>
+                                </div>
+                                <!-- TASK TITLE -->
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="modal_name_lbl" for="modal_name"><strong>Task
+                                            Name</strong></label>
+                                        <input type="text" name="modal_name"
+                                               class="form-control modal_name todo-taskbody-tasktitle"
+                                               id="modal_name"
+                                               placeholder="Task Title"
+                                               required="required">
+                                    </div>
+                                </div>
+                                <!-- TASK DESC -->
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="modal_description_lbl"
+                                               for="modal_description"><strong>Description</strong></label>
+                                        <textarea name="modal_description" class="form-control modal_description"
+                                                  rows="8" placeholder="Task Description"
+                                                  id="modal_description"
+                                                  required="required"></textarea>
+                                    </div>
+                                </div>
+                                <!-- END TASK DESC -->
+                                <!-- TASK DUE DATE -->
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="modal_dueDate_lbl" for="modal_dueDate"><strong>Due
+                                            Date</strong></label>
+                                        <div class="input-icon">
+                                            <i class="fa fa-calendar"></i>
+                                            <input name="modal_dueDate" type="date"
+                                                   class="form-control modal_dueDate"
+                                                   id="modal_dueDate" placeholder="Due Date" required="required">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- TASK TAGS -->
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <label class="modal_priority_lbl" for="modal_priority"><strong>Priority</strong></label>
+                                        <select name="modal_priority" id="modal_priority"
+                                                class="form-control modal_priority">
+                                            <option value="1">High</option>
+                                            <option value="2">Medium</option>
+                                            <option value="3">Low</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                {% include 'tasks/status.html' with el_class='modal_status_action' %}
+                                <!-- TASK TAGS -->
+                            </div>
+                            <div class="tabbable-line comments-history-container">
+                                <ul class="nav nav-tabs ">
+                                    <li class="active">
+                                        <a href="#comments" data-toggle="tab"> Comments </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="comments">
+                                        {% include 'tasks/comments.html' %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-grid-col m-grid-col-top m-grid-col-center m-grid-col-md-3 p-10">
+                            <button data-task-id="0" type="button" data-loading-text="Loading..."
+                                    class="btn dark btn-outline sbold mb-5 w-100 archive_task">
+                                <i class="fa fa-archive"></i> Archive
+                            </button>
+                            <button type="submit" class="btn blue btn-outline sbold mb-5 w-100 save_changes_from_modal">
+                                <i class="fa fa-save"></i> Update
+                            </button>
+                            <button data-task-id="0" type="button" data-loading-text="Loading..."
+                                    class="btn red btn-outline sbold mb-5 w-100 delete_task">
+                                <i class="fa fa-times"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
