@@ -12,7 +12,7 @@ exports.addMessage = functions.https.onRequest((req, res) => {
         var error = []
         var data = req.body;
 
-        key = 'sje-utHGarWjf@n&382';
+        key = '';
         timestamp = data.timestamp;
         token = data.token;
         signature = data.signature;
@@ -66,7 +66,7 @@ exports.getMessages = functions.https.onRequest((req, res) => {
         var data = req.body;
         var result = '';
 
-        key = 'AIzaSyAeOJwDNO-qu4f4aXUVr-2UxTdn-pfnBHY';
+        key = '';
         timestamp = data.timestamp;
         token = data.token;
         signature = data.signature;
@@ -138,7 +138,7 @@ exports.markMessagesFromTimeAsUnread = functions.https.onRequest((req, res) => {
         var data = req.body;
         var result = '';
         var d = {}
-        key = 'AIzaSyAeOJwDNO-qu4f4aXUVr-2UxTdn-pfnBHY';
+        key = '';
         timestamp = data.timestamp;
         token = data.token;
         signature = data.signature;
@@ -264,7 +264,7 @@ exports.assignTask = functions.https.onRequest((req, res) => {
     if (req.method == 'POST') {
         var error = [];
         var data = req.body;
-        key = 'AIzaSyAeOJwDNO-qu4f4aXUVr-2UxTdn-pfnBHY';
+        key = '';
         timestamp = data.timestamp;
         token = data.token;
         signature = data.signature;
@@ -338,7 +338,7 @@ exports.deleteTaskAssignation = functions.https.onRequest((req, res) => {
     if (req.method == 'POST') {
         var error = [];
         var data = req.body;
-        key = 'AIzaSyAeOJwDNO-qu4f4aXUVr-2UxTdn-pfnBHY';
+        key = '';
         timestamp = data.timestamp;
         token = data.token;
         signature = data.signature;
